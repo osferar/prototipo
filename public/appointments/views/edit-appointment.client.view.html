@@ -1,0 +1,50 @@
+<!-- La view edit appointment -->
+<section data-ng-controller="AppointmentsController" data-ng-init="findOne()">
+  <h1>Editar cita</h1>
+  <!-- Formulario editar cita -->
+  <form data-ng-submit="update()" novalidate>
+    <div>
+      <label for="date">Fecha</label>
+      <div>
+        <input type="date" data-ng-model="appointment.date" id="date" placeholder="Date" required>
+      </div>
+    </div>
+    <div>
+      <label for="healthCentre">Centro médico</label>
+      <div>
+        <input type="text" data-ng-model="appointment.healthCentre" id="healthCentre" placeholder="HealthCentre">
+      </div>
+    </div>
+    <div>
+      <label for="specialty">Especialidad</label>
+      <div>
+        <input type="text" data-ng-model="appointment.specialty" id="specialty" placeholder="Specialty" >
+      </div>
+    </div>
+    <div>
+      <label for="doctor">Médico</label>
+      <div>
+        <input type="text" data-ng-model="appointment.doctor" id="doctor" placeholder="Doctor" >
+      </div>
+    </div>
+    <div>
+      <label for="patient"></label>
+      <div>
+        <input type="text" data-ng-model="appointment.patient" id="patient" placeholder="Patient" >
+      </div>
+    </div>
+    <div>
+      <label for="disorder">Afección</label>
+      <div>
+        <textarea data-ng-model="appointment.disorder" id="disorder" cols="30" rows="10" placeholder="Disorder" >
+      </div>
+    </div>
+    <div>
+      <input type="submit" value="Actualizar">
+    </div>
+    <!-- El elemento mensaje de error -->
+    <div data-ng-show="error">
+      <strong data-ng-bind="error"></strong>
+    </div>
+  </form>
+</section>

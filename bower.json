@@ -1,0 +1,9 @@
+{
+  "name": "medicalhistory",
+  "version": "0.0.1",
+  "dependencies": {
+    "angular": "^1.6.9",
+    "angular-route":"^1.6.9",
+    "angular-resource": "^1.6.9"
+  }
+}

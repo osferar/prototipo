@@ -1,0 +1,20 @@
+<!-- la view appointment -->
+<section data-ng-controller="AppointmentsController" data-ng-init="findOne()">
+  <h1 data-ng-bind="appointment.date"></h1>
+  <!-- Mostrar los botones de edicion para el creador de la cita -->
+  <div data-ng-show="authentication.user._id == appointment.creador._id">
+    <a href="/#!/appointments/{{appointment._id}}/edit">edit</a>
+    <a href="#" data-ng-click="delete();">delete</a>
+</div>
+<small>
+  <em>Postear</em>
+  <em data-ng-bind="appointment.created"></em>
+  <em>by</em>
+  <em data-ng-bind="appointment.creador.fullName"></em>
+</small>
+<p data-ng-bind="appointment.healthCentre"></p>
+<p data-ng-bind="appointment.specialty"></p>
+<p data-ng-bind="appointment.doctor"></p>
+<p data-ng-bind="appointment.patient"></p>
+<p data-ng-bind="appointment.disorder"></p>
+</section>

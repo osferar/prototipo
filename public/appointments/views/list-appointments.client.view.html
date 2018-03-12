@@ -1,0 +1,24 @@
+  <!-- La view listar citas -->
+  <section data-ng-controller="AppointmentsController" data-ng-init="find()">
+    <h1>Citas</h1>
+    <ul>
+      <!-- Lista de citas -->
+      <li data-ng-repeat="appointment in appointments">
+        <a data-ng-href="#!/appointments/{{appointment._id}}" data-ng-bind="appointment.date"></a>
+        <br>
+        <small data-ng-bind="appointment.created | date:'medium'"></small>
+        <small></small>
+        <small data-ng-bind="appointment.creador.fullName"></small>
+        <p data-ng-bind="appointment.date"></p>
+        <p data-ng-bind="appointment.healthCentre"></p>
+        <p data-ng-bind="appointment.specialty"></p>
+        <p data-ng-bind="appointment.doctor"></p>
+        <p data-ng-bind="appointment.patient"></p>
+        <p data-ng-bind="appointment.disorder"></p>
+      </li>
+    </ul>
+    <!-- Si no hayy citas en la lista, sugerimos que se cree una nueva cita -->
+    <div data-ng-hide="!appointments || appointments.length">
+      Aún no hay citas, <a href="#!/appointments/create">crear cita</a>?
+    </div>
+  </section>

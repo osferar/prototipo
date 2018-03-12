@@ -1,0 +1,156 @@
+// Invocar modo 'strict' de JavaScript
+'use strict'
+
+// Cargar el modelo Mongoose 'User'
+var User = require('mongoose').model('User'),
+    passport = require('passport');
+
+// Crear un nuevo método controller manejador de errores
+var getErrorMessage = function(err){
+  // Definición de la variable de error message
+  var message= '';
+
+  // Si ocurre un error interno de MongoDB obtener el mensaje de error
+  if(err.code){
+      switch (err.code) {
+        // Si ocurre un error de index único configurar el mensaje de error
+        case 11000:
+        case 11001:
+          message = 'Usuario ya existe / User exists already';
+          break;
+        // Si ocurre un error general configurar el mensaje de error
+        default:
+          message = 'Se ha producido un error / An error ocurred';
+      }
+  } else {
+    // Grabar el primer mensaje de error de una lista de posibles errores
+    for (var errName in err.errors) {
+      if (err.errors[errName].message) message = err.errors[errName].message;
+    }
+  }
+
+  // Devolver el mensaje de error
+  return message;
+};
+
+// Crear un nuevo método controller que renderiza la página signin
+exports.renderSignin = function(req, res, next){
+  // Si el usuario no está conectado renderizar la página signin, si no redireccionar al usuario al raíz
+  if (!req.user){
+    // Usa el objeto 'response' para renderizar la página signin
+    res.render('signin', {
+      // Configurar la variable title de la página
+      title: 'MH > Sign-in Form',
+      // Configurar la variable del mensaje flash
+      messages: req.flash('error') || req.flash('info')
+    });
+  } else {
+    return res.redirect('/');
+  }
+};
+
+// Crear un nuevo método controller que renderiza la página signup
+exports.renderSignup = function(req, res, next){
+  // Si el usuario no está conectado renderizar la página signup, si no redireccionar al usuario al raíz
+  if (!req.user){
+    // Usa el objeto 'response' para renderizar la página signup
+    res.render('signup', {
+      // Configurar la variable title de la página
+      title: 'MH > Sign-up Form',
+      // Configurar la variable del mensaje flash
+      messages: req.flash('error')
+    });
+  } else {
+    return res.redirect('/');
+  }
+};
+
+// Crear un nuevo método controller que crea nuevos usuarios
+exports.signup = function(req, res, next) {
+  // Si user no está conectado, crear y hacer login a un nuevo usuario, si no redireccionar al user de vuelta a la página princippal de la aplicación
+  if(!req.user) {
+    // Crear una nueva instancia del model 'User'
+    var user = new User(req.body);
+    var message = null;
+    // Configurar la propiedad user provider
+    user.provider = 'local';
+    // Intenta salvar el nuevo documento user en MongoDB
+    user.save(function(err) {
+      // Si ocurre un error, usa el mensaje flash para reportar el error
+      if (err) {
+        // Usa el método de manejo de errores para obtener el mensaje de error
+        var message = getErrorMessage(err);
+        // Configura los mensajes flash
+        req.flash('error', message);
+        // Redirecciona al usuario de vuelta a la página signup
+        return res.redirect('/signup');
+      }
+      // Si el usuario fue creado de modo correcto usa el método 'login' de Passport para hacer login
+      req.login(user, function(err) {
+        // Si ocurre un error de login moverse al siguiente middleware con un mensaje de error
+        if(err) return next(err);
+        // Redireccionar al usuario de vuelta a la página de la aplicación principal
+        return res.redirect('/');
+      });
+    });
+  } else {
+    return res.redirect('/');
+  }
+};
+
+// Crear un nuevo método controller que crea nuevos usuarios 'OAuth'
+exports.saveOAuthUserProfile = function(req, profile, done) {
+  // Prueba a encontrar un documento user que fue registrado usando el actual provider OAuth
+  User.findOne({
+    provider: profile.provider,
+    providerId: profile.providerId
+  }, function(err, user){
+    // Si ha ocurrido un error continua al siguiente middleware
+    if (err){
+      return done(err);
+    } else {
+      // Si un usuario no ha podido ser encontrado, crea un nuevo user, en otro caso, continua al siguiente middleware
+      if(!user){
+        // Configura un posible username base username
+        var possibleUsername = profile.username || ((profile.email) ? profile.email.split('@')[0] : '');
+
+        // Encuentra un username único disponible
+        User.findUniqueUsername(possibleUsername, null, function(availableUsername){
+          profile.username = availableUsername;
+
+          // Crea el user
+          user = new User(profile);
+
+          // Intenta salvar en nuevo documento user
+          user.save(function(err){
+            // Continúa al siguiente middleware
+            return done(err,user);
+          });
+        });
+      } else {
+        return done(err,user);
+      }
+    }
+  });
+};
+
+// Crear un nuevo método controller para signing out
+exports.signout = function(req, res){
+  // Usa el método 'logout' de Passport para hacer logout
+  req.logout();
+  // Redirecciona al usuario a la página de la aplicación principal
+  res.redirect('/');
+};
+
+// Crear un nuevo middleware controller que es usado para autorizar operaciones de cita
+exports.requiresLogin = function(req, res, next) {
+  // Si un usuario no está autentificado envía el mensaje de error apropiado
+  if (!req.isAuthenticated()) {
+    return res.status(401).send({
+      message: 'Usuario no está identificado'
+    });
+  }
+
+  // Llamar al siguiente middleware
+  next();
+};

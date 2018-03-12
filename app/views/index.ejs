@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- Usar la propiedad 'title' para renderizar un título de página -->
+    <title><%= title %></title>
+    <link rel="shortcut icon" href="#" />
+  </head>
+  <body>
+
+<!-- <section ng-include="'example/views/example.client.view.html'"></section> -->
+    <section ng-view></section>
+    <script type="text/javascript">
+      window.user = <%- user || 'null'%>
+    </script>
+<!-- Enlaces a los ficheros de módulos angular -->
+    <script type="text/javascript" src="/lib/angular/angular.js"></script>
+    <script type="text/javascript" src="/lib/angular-route/angular-route.js"></script>
+    <script type="text/javascript" src="/lib/angular-resource/angular-resource.js"></script>
+<!-- Enlaces a los ficheros de appointments -->
+    <script type="text/javascript" src="/appointments/controllers/appointments.client.controller.js"></script>
+    <script type="text/javascript" src="/appointments/services/appointments.client.service.js"></script>
+    <script type="text/javascript" src="/appointments/config/appointments.client.routes.js"></script>
+
+<!-- Enlaces a los ficheros de example -->
+    <script type="text/javascript" src="/example/example.client.module.js"></script>
+    <script type="text/javascript" src="/example/controllers/example.client.controller.js"></script>
+    <script type="text/javascript" src="/example/config/example.client.routes.js"></script>
+<!-- Enlaces a los ficheros de usuario -->
+    <script type="text/javascript" src="/users/users.client.module.js"></script>
+    <script type="text/javascript" src="/users/services/authentication.client.service.js"></script>
+
+    <script type="text/javascript" src="/application.js"></script>
+
+  </body>
+</html>

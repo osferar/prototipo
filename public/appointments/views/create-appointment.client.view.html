@@ -1,0 +1,50 @@
+<!-- La view create appointment -->
+<section data-ng-controller="AppointmentsController">
+  <h1>Nueva cita</h1>
+  <!-- Formulario nueva cita -->
+  <form data-ng-submit="create()" novalidate>
+    <div>
+      <label for="date">Fecha</label>
+      <div>
+        <input type="date" data-ng-model="date" id="date" placeholder="Date" required>
+      </div>
+    </div>
+    <div>
+      <label for="healthCentre">Centro médico</label>
+      <div>
+        <input type="text" data-ng-model="healthCentre" id="healthCentre" placeholder="HealthCentre">
+      </div>
+    </div>
+    <div>
+      <label for="specialty">Especialidad</label>
+      <div>
+        <input type="text" data-ng-model="specialty" id="specialty" placeholder="Specialty" >
+      </div>
+    </div>
+    <div>
+      <label for="doctor">Médico</label>
+      <div>
+        <input type="text" data-ng-model="doctor" id="doctor" placeholder="Doctor" >
+      </div>
+    </div>
+    <div>
+      <label for="patient"></label>
+      <div>
+        <input type="text" data-ng-model="patient" id="patient" placeholder="Patient" >
+      </div>
+    </div>
+    <div>
+      <label for="disorder">Afección</label>
+      <div>
+        <textarea data-ng-model="disorder" id="disorder" cols="30" rows="10" placeholder="Disorder"></textarea>
+      </div>
+    </div>
+    <div>
+      <input type="submit">
+    </div>
+    <!-- El elemento mensaje de error -->
+    <div data-ng-show="error">
+      <strong data-ng-bind="error"></strong>
+    </div>
+  </form>
+</section>
